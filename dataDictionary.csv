@@ -1,0 +1,14 @@
+﻿table,column name,data type,description
+patient,patient_id,varchar,Unique patient identifier
+patient,dob,timestamp,Date of birth
+patient,dod,timestamp,Date of death
+patient,gender,varchar,Self reported gender
+diagnosis,patient_id,varchar,Unique patient identifier
+diagnosis,diagnosis_date,timestamp,Date of the diagnosis encounter
+diagnosis,diagnosis_code,varchar,Diagnosis code collected at the encounter
+diagnosis,diagnosis_code_type,varchar,Type of diagnosis code collected at the encounter
+biomarker,patient_id,varchar,Unique patient identifier
+biomarker,test_date,timestamp,Date of the biomarker test encounter
+biomarker,biomarker_name,varchar,Name of the biomarker tested at that encounter
+biomarker,biomarker_test_type,varchar,Type of test performed at that encounter
+biomarker,test_result,varchar,Result of the test performed at the encounter

@@ -129,10 +129,13 @@ df_final["status"] = df_final["dod"].notna().map({
 ### begin streamlit elements
 st.title("Breast Cancer Patients: Survival Times")
 st.divider()
-age_to_stratify = st.slider(label = "age_at_diagnosis", 
-                            min_value = 10,
-                            max_value = 90,
+
+min_age, max_age = np.min(df_final["age_at_diagnosis"]), np.max(df_final["age_at_diagnosis"])
+age_to_stratify = st.slider(label = "Age at diagnosis", 
+                            min_value = min_age,
+                            max_value = max_age,
                             value = 60)
+st.header(f"Data exploration")
 
 mask = df_final["age_at_diagnosis"] > age_to_stratify
 df_final["stratified_age"] = mask
@@ -182,8 +185,12 @@ fig_status.legend([f"above {age_to_stratify}", f"below {age_to_stratify}"],
            loc = "upper center",
            ncols = len(ax))
 st.pyplot(fig_status)
-###
 
+
+
+
+###
+st.header("Survival Analysis")
 df_final["status"] = df_final["status"].map({
                                                 "event": 1,
                                                 "censor": 0
@@ -215,14 +222,30 @@ st.pyplot(fig_km, use_container_width = True)
 ###
 
 # Calculate median survival times and their confidence intervals (using median survival times package from lifelines)
-#median_upper = km_upperage.median_survival_time_
-#median_ci_upper = median_survival_times(km_upperage.confidence_interval_).to_numpy()[0]
-#median_lower = km_lowerage.median_survival_time_
-#median_ci_lower = median_survival_times(km_lowerage.confidence_interval_).to_numpy()[0]
+median_upper = km_upperage.median_survival_time_
+median_ci_upper = median_survival_times(km_upperage.confidence_interval_).to_numpy()[0]
+median_lower = km_lowerage.median_survival_time_
+median_ci_lower = median_survival_times(km_lowerage.confidence_interval_).to_numpy()[0]
 
-#print(f"Median survival time for patients over {age_to_stratify} years of age is {median_upper} {median_ci_upper[0],median_ci_upper[1]}")
-#print(f"Median survival time for patients below {age_to_stratify} years of age is {median_lower} {median_ci_lower[0],median_ci_lower[1]}")
+#st.subheader(f"Median survival time for patients over {age_to_stratify} years of age is {median_upper} {median_ci_upper[0],median_ci_upper[1]}")
+#st.subheader(f"Median survival time for patients below {age_to_stratify} years of age is {median_lower} {median_ci_lower[0],median_ci_lower[1]}")
 
+col1, col2 = st.columns(2)
+col1.metric(label = f"Median Survival Time (Above {age_to_stratify})",
+            value = f"{median_upper} years"
+            )  
+col2.metric(label = f"Median Survival Time (below {age_to_stratify})",
+            value = f"{median_lower} years"
+            )  
+# logrank test between survival times of patients above and below the stratifyng age
+stats_results = logrank_test(df_final.loc[mask,"follow_up_time"], df_final.loc[~mask,"follow_up_time"], 
+                             df_final.loc[mask,"status"], df_final.loc[~mask,"status"])
 
+p_value = stats_results.p_value
+alpha = 0.05
+# Printing summary of results
 
-
+if p_value < alpha:
+    st.subheader(f"Difference in survival times :red[is] statistically signicant at {alpha*100 :0.0f}% significance, *p*-value: **{stats_results.p_value:0.2f}**")
+else:
+    st.subheader(f"Difference in survival times :red[is not] statistically signicant at {alpha*100  :0.0f}% significance, *p*-value: **{stats_results.p_value:0.2f}**")

@@ -19,7 +19,7 @@
 ### Data:
 Randomly generated
 
-Future work:
+### Future work:
 Extend the app to include Gender based stratification 
  <br>
 Include multi-page functionality

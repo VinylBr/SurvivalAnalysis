@@ -24,7 +24,6 @@ patient['dod'] = patient['dob'] + pd.to_timedelta(np.random.randint(10000,30000,
 #suppress death dates past 2025
 patient['gender'] = random.choices(['male','female','nonbinary','other','NULL'],[0.45,0.45,0.02,0.02,0.06],k=n_pats)
 
-
 # Diagnosis table
 diagnosis_codes = ['C50', 'C50.2', 'C50.4', 'C50.49', 'C61', 'I10', 'J18.9', 'C51']
 diagnosis_codes_probs = [0.2, 0.2, 0.2, 0.2, 0.05, 0.05, 0.05, 0.05]
@@ -74,6 +73,14 @@ for _, row in patient.iterrows():
         biomarker_records.append(record)
 
 biomarker = pd.DataFrame(biomarker_records)
+
+
+# Changes to generateDB
+
+
+
+
+#
 
 conn = sqlite3.connect("techTestv2.db")
 

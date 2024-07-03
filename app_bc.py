@@ -127,7 +127,7 @@ df_final["status"] = df_final["dod"].notna().map({
                                                 })
 
 ### begin streamlit elements
-st.title("Breast Cancer Patients: Survival Times")
+st.title("Investigation of Breast Cancer Dataset")
 st.divider()
 
 min_age, max_age = np.min(df_final["age_at_diagnosis"]), np.max(df_final["age_at_diagnosis"])
@@ -204,7 +204,7 @@ km_upper = KaplanMeierFitter()
 
 # fitting Kaplan-Meier for patients below the stratify_age
 km_lowerage = km_lower.fit(df_final.loc[~mask,"follow_up_time"], df_final.loc[~mask,"status"])
-km_lowerage.plot(label = f"lower {age_to_stratify}")
+km_lowerage.plot(label = f"below {age_to_stratify}")
 
 # fitting Kaplan-Meier for patient above the stratify_age
 km_upperage = km_upper.fit(df_final.loc[mask,"follow_up_time"], df_final.loc[mask,"status"])

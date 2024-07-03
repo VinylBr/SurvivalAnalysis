@@ -20,6 +20,5 @@
 Randomly generated
 
 ### Future work:
-Extend the app to include Gender based stratification 
- <br>
-Include multi-page functionality
+1. Extend the app to include Gender based stratification 
+2. Include multi-page functionality
